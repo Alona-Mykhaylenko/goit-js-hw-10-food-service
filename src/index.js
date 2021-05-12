@@ -1,22 +1,38 @@
 import './styles.css';
-console.log('run');
-import './js/test';
+import menu from './menu.json';
+import makeMenuCards from './menu.hbs';
 
-// =============1. Default import-export
-// import print from './js/test';
-// console.log(print);
+const jsMenu = document.querySelector('.js-menu');
+const markup = makeMenuCards(menu);
+jsMenu.innerHTML = markup;
 
-// print('hello');
+const themeSwitch = document.querySelector('.theme-switch__toggle');
+const body = document.body;
 
-// =============2. Named import-export
+themeSwitch.addEventListener('change', themeSwitchToggle);
 
-// import { text, printText } from './js/test';
-// console.log(text);
-// printText('uhdjncjkhkjnavkn');
+const Theme = {
+  LIGHT: 'light-theme',
+  DARK: 'dark-theme',
+};
 
-// ============ 3. Another option of named import
+const { LIGHT, DARK } = Theme;
 
-import * as object from './js/test';
-console.log(object.text);
+function themeSwitchToggle(event) {
+  if (event.target.checked) {
+    replaceTheme(LIGHT, DARK);
+  } else {
+    replaceTheme(DARK, LIGHT);
+  }
+}
 
-object.printText('uhdjncjkhkjnavkn');
+function replaceTheme(oldTheme, newTheme) {
+  document.body.classList.add(newTheme);
+  document.body.classList.remove(oldTheme);
+  localStorage.setItem('theme', newTheme);
+}
+
+if (localStorage.getItem('theme') === DARK) {
+  replaceTheme(LIGHT, DARK);
+  themeSwitch.checked = true;
+}
